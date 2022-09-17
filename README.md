@@ -4,15 +4,8 @@
 在使用 uniCloud 开发时，需要调用Hbuilder进行云函数的上传，如果不想使用Hbuilder上传云函数，可以采用cli的方式，但cli方式命令行过长，且不易使用，本工具便简化其使用。
 
 ## 如何使用
-下载Releases内最符合您操作系统的版本，将uc.exe 文件放置在您的运行目录下，首次运行会在当前目录下生成一个ucConfig.json文件，请使用记事本或者编辑器打开该文件，并将hbuilder运行目录填写在hbuilder对应的位置，object与provider不用填写，如：  
-`
-{
-    "hbuilder":"D:\HbuilderX",
-    "object":"",
-    "provider":""
-}
-`  
-填写之后，即可使用如下方法进行操作  
+### 务必将Hbuilder路径设在在环境变量内，否则会提示版本冲突
+下载Releases内最符合您操作系统的版本，将uc.exe 文件放置在您的运行目录下即可使用如下方法进行操作  
 ### 1. **列举资源信息**  
 `uc.exe -l [resource]` 如 `uc.exe -l cf` 表示：列举当前项目中所有云端函数  
 ### 2. **资源上传[默认覆盖非跳过]**  
@@ -28,6 +21,10 @@
 | vf | 数据库校验函数  |  
 | ac 或 action | 数据库触发条件 |  
 | sp 或 space | 云空间 |  
+
+## 打包相关
+采用nuitka进行打包，命令如下
+`nuitka --mingw64 --standalone --show-progress --show-memory --windows-icon-from-ico=./logo.ico --output-dir=out uc.py`
 
 ## 关于作者
 [歪克士的博客](https://wicos.me)

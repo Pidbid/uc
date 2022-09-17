@@ -21,26 +21,9 @@ class cloudUp:
         self.__config_init__()
 
     def __config_init__(self):
-        if not os.path.isfile("ucConfig.json"):
-            with open("./ucConfig.json", "w+") as fp:
-                fp.write(json.dumps(
-                    {"hbuilder": "", "provider": "", "project": ""}, indent=4))
-        json_file = open(os.path.split(self.path)[0]+"/ucConfig.json")
-        config = json.load(json_file)
-        if "\\" in config['hbuilder']:
-            config['hbuilder'] = config['hbuilder'].replace("\\", "/")
-            with open(os.path.split(self.path)[0]+"/ucConfig.json", "w+") as fp:
-                fp.write(json.dumps(config, indent=4))
-            json_file = open(os.path.split(self.path)[0]+"/ucConfig.json")
-            config = json.load(json_file)
-        self.cli = config['hbuilder']+'/cli.exe'
-        self.provider = config['provider'] or self.__provider_init__()
-        self.project = config['project'] or self.path.split("/")[-2]
-        if config["project"] == "" or config["provider"] == "":
-            config["project"] = self.project
-            config["provider"] = self.provider
-            with open(os.path.split(self.path)[0]+"/ucConfig.json", "w+") as fp:
-                fp.write(json.dumps(config, indent=4))
+        self.cli = '%Hbuilder%\cli'
+        self.provider =self.__provider_init__()
+        self.project = self.path.split("/")[-2]
 
     def __provider_init__(self):
         file_list = os.listdir()
@@ -68,24 +51,27 @@ class cloudUp:
     # def
     def __run__(self, action):
         if action == "list":
+            command = "{} cloud functions --list {} --prj {} --provider {} --cloud".format(
+                self.cli, self.resource, self.project, self.provider)
             result = subprocess.Popen(
-                "{} cloud functions --list {} --prj {} --provider {} --cloud".format(self.cli, self.resource, self.project, self.provider), shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         if action == "upload":
+            command = "{} cloud functions --upload {} --prj {} --provider {} --name {} --force".format(
+                self.cli, self.resource, self.project, self.provider, self.name)
             result = subprocess.Popen(
-                "{} cloud functions --upload {} --prj {} --provider {} --name {} --force".format(self.cli, self.resource, self.project, self.provider, self.name), shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         if action == "download":
+            command = "{} cloud functions --download {} --prj {} --provider {} --name {} --force".format(
+                self.cli, self.resource, self.project, self.provider, self.name)
             result = subprocess.Popen(
-                "{} cloud functions --download {} --prj {} --provider {} --name {} --force".format(self.cli, self.resource, self.project, self.provider, self.name), shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        while result.poll() is None:
-            try:
-                print_out = result.stdout.readline().decode("utf-8")
-                if print_out != "":
-                    print(print_out)
-            except:
-                print_out = result.stdout.read().decode("utf-8")
-                if print_out != "":
-                    print(print_out)
-                    
+                command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        try:
+            outs, errs = result.communicate(timeout=20)
+            print(str(outs, 'gbk'))
+        except subprocess.TimeoutExpired:
+            result.kill()
+            outs, errs = result.communicate()
+
     def start(self):
         opts, args = getopt.getopt(sys.argv[1:], "uld", [
                                    "upload", "list", "download"])
