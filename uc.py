@@ -77,10 +77,15 @@ class cloudUp:
             result = subprocess.Popen(
                 "{} cloud functions --download {} --prj {} --provider {} --name {} --force".format(self.cli, self.resource, self.project, self.provider, self.name), shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while result.poll() is None:
-            print_out = result.stdout.readline().decode("utf-8")
-            if print_out != "":
-                print(print_out)
-
+            try:
+                print_out = result.stdout.readline().decode("utf-8")
+                if print_out != "":
+                    print(print_out)
+            except:
+                print_out = result.stdout.read().decode("utf-8")
+                if print_out != "":
+                    print(print_out)
+                    
     def start(self):
         opts, args = getopt.getopt(sys.argv[1:], "uld", [
                                    "upload", "list", "download"])

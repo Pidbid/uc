@@ -13,21 +13,21 @@
 }
 `  
 填写之后，即可使用如下方法进行操作  
-1. **列举资源信息**  
+### 1. **列举资源信息**  
 `uc.exe -l [resource]` 如 `uc.exe -l cf` 表示：列举当前项目中所有云端函数  
-2. **资源上传[默认覆盖非跳过]**  
+### 2. **资源上传[默认覆盖非跳过]**  
 `uc.exe -u [resource] [name]` 如 `uc.exe -u cf test` 表示：上传名称为test的云函数，如果云端存在同名函数则覆盖  
-3. **资源下载[默认覆盖非跳过]**  
+### 3. **资源下载[默认覆盖非跳过]**  
 `uc.exe -d [resource] [name]` 如 `uc.exe -d cf test` 表示：下载名称为test的云函数，如果本地存在同名函数则覆盖  
-4. resource的取值如下  
+### 4. resource的取值如下  
 |resource  | 含义 |  
 | ----------- | ----------- |  
 | cf 或 cloudfunction | 云函数 |  
 | cm 或 common | 云函数的公共模块 |  
 | db | 数据集合Schema |  
 | vf | 数据库校验函数  |  
-| ac | 数据库触发条件 |  
-| sp | 云空间 |  
+| ac 或 action | 数据库触发条件 |  
+| sp 或 space | 云空间 |  
 
 ## 关于作者
 [歪克士的博客](https://wicos.me)
